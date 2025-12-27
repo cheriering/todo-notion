@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>Pink Todo Widget</title>
+<style>
+  body {
+    background: transparent;
+    font-family: "Pretendard", sans-serif;
+  }
+
+  .todo-box {
+    width: 280px;
+    padding: 14px;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 0 0 2px #ffd6e7;
+  }
+
+  .todo-title {
+    color: #ff8fb8;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  input {
+    flex: 1;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px solid #ffd6e7;
+    outline: none;
+  }
+
+  button {
+    border: none;
+    background: #ffb3cf;
+    color: white;
+    border-radius: 8px;
+    padding: 0 10px;
+    cursor: pointer;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px;
+    border-radius: 8px;
+    font-size: 13px;
+  }
+
+  li.done span {
+    text-decoration: line-through;
+    opacity: 0.4;
+  }
+
+  .heart {
+    cursor: pointer;
+    color: #ffc1da;
+  }
+
+  .heart.active {
+    color: #ff5fa2;
+  }
+
+  .delete {
+    margin-left: auto;
+    cursor: pointer;
+    opacity: 0.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="todo-box">
+  <div class="todo-title">♡ my to do list</div>
+
+  <div class="input-row">
+    <input id="todoInput" placeholder="할 일 추가..." />
+    <button onclick="addTodo()">+</button>
+  </div>
+
+  <ul id="todoList"></ul>
+</div>
+
+<script>
+  function addTodo() {
+    const input = document.getElementById("todoInput");
+    if (!input.value.trim()) return;
+
+    const li = document.createElement("li");
+
+    li.innerHTML = `
+      <input type="checkbox">
+      <span>${input.value}</span>
+      <span class="heart">♡</span>
+      <span class="delete">✕</span>
+    `;
+
+    li.querySelector("input").onchange = () =>
+      li.classList.toggle("done");
+
+    li.querySelector(".heart").onclick = (e) =>
+      e.target.classList.toggle("active");
+
+    li.querySelector(".delete").onclick = () =>
+      li.remove();
+
+    document.getElementById("todoList").appendChild(li);
+    input.value = "";
+  }
+</script>
+
+</body>
+</html>
