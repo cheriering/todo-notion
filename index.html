@@ -87,7 +87,7 @@
 <body>
 
 <div class="todo-box">
-  <div class="todo-title">every day is day 1...♡ </div>
+  <div class="todo-title">every day is day 1...♡</div>
 
   <div class="input-row">
     <input id="todoInput" type="text" placeholder="할 일 추가..." />
@@ -98,16 +98,23 @@
 </div>
 
 <script>
-  function addTodo() {
-    const input = document.getElementById("todoInput");
-    if (!input.value.trim()) return;
+  const todoInput = document.getElementById("todoInput");
+  const todoList = document.getElementById("todoList");
 
+  // 페이지 로드 시 기존 데이터 불러오기
+  window.onload = () => {
+    const savedTodos = JSON.parse(localStorage.getItem("todos") || "[]");
+    savedTodos.forEach(todo => createTodoElement(todo.text, todo.done));
+  };
+
+  function createTodoElement(text, done = false) {
     const li = document.createElement("li");
+    li.classList.toggle("done", done);
 
     li.innerHTML = `
-      <input type="checkbox">
-      <span class="text">${input.value}</span>
-      <span class="heart">♡</span>
+      <input type="checkbox" ${done ? "checked" : ""}>
+      <span class="text">${text}</span>
+      <span class="heart">${done ? "♥" : "♡"}</span>
       <span class="delete">✕</span>
     `;
 
@@ -118,14 +125,33 @@
     checkbox.onchange = () => {
       li.classList.toggle("done", checkbox.checked);
       heart.textContent = checkbox.checked ? "♥" : "♡";
+      saveTodos();
     };
 
     del.onclick = () => {
       li.remove();
+      saveTodos();
     };
 
-    document.getElementById("todoList").appendChild(li);
-    input.value = "";
+    todoList.appendChild(li);
+  }
+
+  function addTodo() {
+    const text = todoInput.value.trim();
+    if (!text) return;
+    createTodoElement(text);
+    todoInput.value = "";
+    saveTodos();
+  }
+
+  function saveTodos() {
+    const todos = [];
+    todoList.querySelectorAll("li").forEach(li => {
+      const text = li.querySelector(".text").textContent;
+      const done = li.classList.contains("done");
+      todos.push({ text, done });
+    });
+    localStorage.setItem("todos", JSON.stringify(todos));
   }
 </script>
 
