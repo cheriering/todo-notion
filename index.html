@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <title>Pink Todo Widget</title>
+
 <style>
   body {
     background: transparent;
@@ -29,7 +30,7 @@
     margin-bottom: 10px;
   }
 
-  input {
+  input[type="text"] {
     flex: 1;
     padding: 6px 8px;
     border-radius: 8px;
@@ -61,34 +62,35 @@
     font-size: 13px;
   }
 
-  li.done span {
+  .text {
+    flex: 1;
+    text-align: left;
+  }
+
+  li.done .text {
     text-decoration: line-through;
     opacity: 0.4;
   }
 
- .heart {
-  color: #ff5fa2;
-  font-size: 14px;
-}
-
-.delete {
-  cursor: pointer;
-  opacity: 0.4;
-}
+  .heart {
+    color: #ff5fa2;
+    font-size: 14px;
   }
-  li span {
-  flex: 1;
-  text-align: left;
-}
+
+  .delete {
+    cursor: pointer;
+    opacity: 0.4;
+  }
 </style>
 </head>
+
 <body>
 
 <div class="todo-box">
   <div class="todo-title">♡ my to do list</div>
 
   <div class="input-row">
-    <input id="todoInput" placeholder="할 일 추가..." />
+    <input id="todoInput" type="text" placeholder="할 일 추가..." />
     <button onclick="addTodo()">+</button>
   </div>
 
@@ -118,13 +120,14 @@
       heart.textContent = checkbox.checked ? "♥" : "♡";
     };
 
-    del.onclick = () => li.remove();
+    del.onclick = () => {
+      li.remove();
+    };
 
     document.getElementById("todoList").appendChild(li);
     input.value = "";
   }
 </script>
-
 
 </body>
 </html>
