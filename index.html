@@ -97,20 +97,36 @@
   <ul id="todoList"></ul>
 </div>
 
+// ... (CSS 부분은 동일)
+
 <script>
   const todoInput = document.getElementById("todoInput");
   const todoList = document.getElementById("todoList");
 
-  // 페이지 로드 시 기존 데이터 불러오기
-  window.onload = () => {
-    const savedTodos = JSON.parse(localStorage.getItem("todos") || "[]");
-    savedTodos.forEach(todo => createTodoElement(todo.text, todo.done));
-  };
+  // 데이터 불러오기 함수
+  function loadTodos() {
+    const saved = localStorage.getItem("pink_todo_data");
+    if (saved) {
+      const items = JSON.parse(saved);
+      items.forEach(todo => createTodoElement(todo.text, todo.done));
+    }
+  }
+
+  // 데이터 저장하기 함수
+  function saveTodos() {
+    const todos = [];
+    todoList.querySelectorAll("li").forEach(li => {
+      todos.push({
+        text: li.querySelector(".text").textContent,
+        done: li.classList.contains("done")
+      });
+    });
+    localStorage.setItem("pink_todo_data", JSON.stringify(todos));
+  }
 
   function createTodoElement(text, done = false) {
     const li = document.createElement("li");
-    li.classList.toggle("done", done);
-
+    li.className = done ? "done" : "";
     li.innerHTML = `
       <input type="checkbox" ${done ? "checked" : ""}>
       <span class="text">${text}</span>
@@ -120,17 +136,16 @@
 
     const checkbox = li.querySelector("input");
     const heart = li.querySelector(".heart");
-    const del = li.querySelector(".delete");
-
+    
     checkbox.onchange = () => {
       li.classList.toggle("done", checkbox.checked);
       heart.textContent = checkbox.checked ? "♥" : "♡";
-      saveTodos();
+      saveTodos(); // 변경될 때마다 저장
     };
 
-    del.onclick = () => {
+    li.querySelector(".delete").onclick = () => {
       li.remove();
-      saveTodos();
+      saveTodos(); // 삭제될 때마다 저장
     };
 
     todoList.appendChild(li);
@@ -138,21 +153,19 @@
 
   function addTodo() {
     const text = todoInput.value.trim();
-    if (!text) return;
-    createTodoElement(text);
-    todoInput.value = "";
-    saveTodos();
+    if (text) {
+      createTodoElement(text);
+      todoInput.value = "";
+      saveTodos();
+    }
   }
 
-  function saveTodos() {
-    const todos = [];
-    todoList.querySelectorAll("li").forEach(li => {
-      const text = li.querySelector(".text").textContent;
-      const done = li.classList.contains("done");
-      todos.push({ text, done });
-    });
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }
+  // 엔터키 지원 추가
+  todoInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") addTodo();
+  });
+
+  window.onload = loadTodos;
 </script>
 
 </body>
