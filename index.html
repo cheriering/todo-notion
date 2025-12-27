@@ -66,19 +66,15 @@
     opacity: 0.4;
   }
 
-  .heart {
-    cursor: pointer;
-    color: #ffc1da;
-  }
+ .heart {
+  color: #ff5fa2;
+  font-size: 14px;
+}
 
-  .heart.active {
-    color: #ff5fa2;
-  }
-
-  .delete {
-    margin-left: auto;
-    cursor: pointer;
-    opacity: 0.5;
+.delete {
+  cursor: pointer;
+  opacity: 0.4;
+}
   }
   li span {
   flex: 1;
@@ -108,24 +104,27 @@
 
     li.innerHTML = `
       <input type="checkbox">
-      <span>${input.value}</span>
+      <span class="text">${input.value}</span>
       <span class="heart">♡</span>
       <span class="delete">✕</span>
     `;
 
-    li.querySelector("input").onchange = () =>
-      li.classList.toggle("done");
+    const checkbox = li.querySelector("input");
+    const heart = li.querySelector(".heart");
+    const del = li.querySelector(".delete");
 
-    li.querySelector(".heart").onclick = (e) =>
-      e.target.classList.toggle("active");
+    checkbox.onchange = () => {
+      li.classList.toggle("done", checkbox.checked);
+      heart.textContent = checkbox.checked ? "♥" : "♡";
+    };
 
-    li.querySelector(".delete").onclick = () =>
-      li.remove();
+    del.onclick = () => li.remove();
 
     document.getElementById("todoList").appendChild(li);
     input.value = "";
   }
 </script>
+
 
 </body>
 </html>
